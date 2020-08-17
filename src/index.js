@@ -1,23 +1,25 @@
+import { createElement, render, Component } from './toy-react'
 
-const { createElement, render, Component } = require('./toy-react')
-class MyComponent extends Component{
-    
+class MyComponentA extends Component{
+
     render(){
-        return <div>
-            <h1>my component</h1>
+        return <MyComponentB id="MyComponentA">
             {this.children}
+        </MyComponentB>
+    }
+}
+
+class MyComponentB extends Component{
+
+    render(){
+        return <div id="MyComponentB">
+            Hello World
         </div>
     }
 }
 
 
-const div = <MyComponent id="1">
-    <div class="child"></div>
-    <div class="child">
-        <div class="child-child"></div>
-    </div>
-    <div class="child">Hello World</div>
-</MyComponent>
 
 
-render(div, document.body)
+
+render(<MyComponentA />, document.getElementById("root"))

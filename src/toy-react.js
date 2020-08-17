@@ -1,5 +1,4 @@
-
-class Component{
+export class Component{
     constructor(){
         this.props = Object.create(null)
         this._root = null
@@ -15,67 +14,68 @@ class Component{
     }
 
     get root(){
-       if(!this._root){
-           this._root = this.render().root; // 如果render出来是个Component，会继续递归
-       }
-       return this._root;
+        if(!this._root){
+            this._root = this.render().root // 如果render出来是个Component，会继续递归
+        }
+        return this._root
     }
 }
 
 class ElementWrapper{
+
     constructor(type){
         this.root = document.createElement(type)
     }
 
-    setAttribute(name, value){
-        this.root.setAttribute(name, value)
+    setAttribute(attributeName, attribute){
+        this.root.setAttribute(attributeName, attribute)
     }
 
-    appendChild(component){
-        this.root.appendChild(component.root)
-    }
-
-}
-
-class TextWrapper{
-    constructor(content){
-        this.root = document.createTextNode(content)
+    appendChild(child){
+        this.root.appendChild(child.root)
     }
 }
 
-function createElement(type, attributes, ...children){
-    let e;
+class TextNodeWrapper{
+    constructor(type){
+        this.root = document.createTextNode(type)
+    }
+}
+
+
+export function createElement(type, attributes, ...children){
+    let element = null
     if(typeof type === "string"){
-        e = new ElementWrapper(type)
-    }else {
-        e = new type
+        element = new ElementWrapper(type)
+    }else{
+        element = new type
     }
-    
-    for (const p in attributes) {
-        if (attributes.hasOwnProperty(p)) {
-            const attribute = attributes[p];
-            e.setAttribute(p, attribute)
+    if(typeof attributes === "object" && attributes != null){
+        for (const attributeName in attributes) {
+            if (attributes.hasOwnProperty(attributeName)) {
+                const attribute = attributes[attributeName];
+                element.setAttribute(attributeName, attribute)
+            }
         }
     }
 
-    const insertChildren = (children) => {
+    function insertChildren(children){
         for (let child of children) {
             if(typeof child === "string"){
-                child = new TextWrapper(child)
+                child = new TextNodeWrapper(child)
             }
             if(typeof child === "object" && child instanceof Array){
                 insertChildren(child)
             }else{
-                e.appendChild(child)
+                element.appendChild(child)
             }
+           
         }
     }
     insertChildren(children)
-    return e
+    return element
 }
 
-function render(component, parentElement){
+export function render(component, parentElement){
     parentElement.appendChild(component.root)
 }
-
-module.exports = { createElement, render, Component }
