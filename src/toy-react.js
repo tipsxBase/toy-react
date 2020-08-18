@@ -17,6 +17,7 @@ class Component{
 
     [RENDER_TO_DOM](range){
         this._range = range
+        // 触发子元素的createElement
         this.render()[RENDER_TO_DOM](range)
     }
 
