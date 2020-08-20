@@ -6,6 +6,10 @@
   "scripts": {
     "build": "npx webpack --watch"
   },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/tipsxBase/toy-react"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
